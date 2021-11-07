@@ -23,5 +23,5 @@ export default {
 .content {
   flex-grow: 1;
   overflow: auto;
-}
+} /*固定内容面*/
 </style>
