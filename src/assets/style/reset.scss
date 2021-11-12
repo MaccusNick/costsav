@@ -1,0 +1,20 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+ul,
+ol {
+  list-style: none;
+}
+button, input{
+  font: inherit;
+}/*子元素无法继承父元素字体，所以声明全局 button 和 input 继承字体即可*/
+:focus{
+  outline: none;
+}

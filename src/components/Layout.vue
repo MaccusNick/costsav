@@ -1,7 +1,7 @@
 <template>
   <div class="nav-wrapper">
-    <div class="content">
-      <slot/>
+    <div class="content" :class="classPrefix && `${classPrefix}-content` ">
+      <slot />
     </div>
     <Nav />
   </div>
@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  props: ['classPrefix'],
   name: "Layout",
 };
 </script>
@@ -17,8 +18,8 @@ export default {
 .nav-wrapper {
   height: 100vh;
   display: flex;
-  border: 1px solid green;
   flex-direction: column;
+  
 }
 .content {
   flex-grow: 1;
