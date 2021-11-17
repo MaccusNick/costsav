@@ -1,6 +1,6 @@
 <template>
   <Layout class-prefix="layout">
-    <tags />
+    <tags :dataSource="tags" />
     <notes />
     <types :xxx="123" />
     <number-pad />
@@ -15,6 +15,11 @@ import Notes from "@/components/Notes.vue";
 export default {
   components: { NumberPad, Tags, Types, Notes },
   name: "Money",
+  data() {
+    return {
+      tags: ["衣", "食", "住", "行"],
+    };
+  },
 };
 </script>
 <style lang="scss">

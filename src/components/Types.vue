@@ -13,7 +13,6 @@ import { Component ,Prop} from "vue-property-decorator";
 
 @Component
 
-
 export default class Types extends Vue {
   type = "-";
   @Prop(Number) xxx: number | undefined;
