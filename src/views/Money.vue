@@ -1,8 +1,8 @@
 <template>
   <Layout class-prefix="layout">
-    <tags :dataSource="tags" />
+    <tags :dataSource.sync="tags" />
     <notes />
-    <types :xxx="123" />
+    <types />
     <number-pad />
   </Layout>
 </template>
