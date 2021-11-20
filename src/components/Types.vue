@@ -9,38 +9,19 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Component ,Prop} from "vue-property-decorator";
+import { Component, Prop } from "vue-property-decorator";
 
 @Component
-
 export default class Types extends Vue {
-  type = "-";
-  @Prop(Number) xxx: number | undefined;
+  @Prop() readonly type!: string;
 
   selectType(type: string) {
     if (type !== "-" && type !== "+") {
       throw new Error("type is unknown");
     }
-    this.type = type;
+    this.$emit("update:type", type);
   }
-
 }
-// export default {
-//     name:"Types",
-//     data(){
-//         return {
-//             type:'-'
-//         }
-//     },
-//     methods:{
-//         selectType(type){
-//             if(type !=='-' && type !== '+'){
-//                 throw new Error('type is unkown')
-//             }
-//             this.type = type
-//         }
-//     }
-// }
 </script>
 
 <style lang="scss" scoped>

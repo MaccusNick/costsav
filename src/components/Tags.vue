@@ -31,6 +31,7 @@ export default class Tags extends Vue {
     } else if (this.selectedTags.length == 0) {
       this.selectedTags.push(tag);
     }
+    this.$emit("update:selected", this.selectedTags);
   }
   create() {
     const name = window.prompt("请输入标签名");
@@ -38,8 +39,9 @@ export default class Tags extends Vue {
       window.alert("标签名不能为空");
     } else if (this.dataSource) {
       this.$emit("update:dataSource", [...this.dataSource, name]);
-      console.log(this.dataSource);
+      
     }
+    
   }
 }
 </script>
