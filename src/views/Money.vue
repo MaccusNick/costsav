@@ -1,7 +1,11 @@
 <template>
   <Layout class-prefix="layout">
     <tags :dataSource.sync="tags" @update:selected="onUpdateTags" />
-    <notes @update:value="onUpdateNotes" />
+    <notes
+      fieldName="备注"
+      placeholder="在这里输入备注"
+      @update:value="onUpdateNotes"
+    />
     <types :type.sync="record.type" />
     <number-pad :value.sync="record.amount" @update:submit="saveRecord" />
   </Layout>
@@ -15,7 +19,7 @@ import Types from "@/components/Types.vue";
 import Notes from "@/components/Notes.vue";
 import { Component, Watch } from "vue-property-decorator";
 import recordListModel from "@/models/recordListModel";
-import tagListModel from "@/models/tagListModel"
+import tagListModel from "@/models/tagListModel";
 
 const recordList: RecordItem[] = recordListModel.fetch();
 const tagList = tagListModel.fetch();
