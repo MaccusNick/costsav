@@ -6,7 +6,8 @@
         class="value"
         type="text"
         :placeholder="this.placeholder"
-        v-model="value"
+        :value="value"
+        @input="onValueChanged($event.target.value)"
       />
     </label>
   </div>
@@ -18,7 +19,7 @@ import { Component, Watch, Prop } from "vue-property-decorator";
 
 @Component
 export default class Notes extends Vue {
-  value = "";
+  @Prop({ default: "" }) value!: string;
   @Prop({ required: true }) fieldName!: string;
   @Prop({ default: "" }) placeholder?: string;
 
