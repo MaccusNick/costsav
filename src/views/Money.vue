@@ -1,11 +1,13 @@
 <template>
   <Layout class-prefix="layout">
     <tags :dataSource.sync="tags" @update:selected="onUpdateTags" />
-    <notes
-      fieldName="备注"
-      placeholder="在这里输入备注"
-      @update:value="onUpdateNotes"
-    />
+    <div class="notes">
+      <FormItem
+        fieldName="备注"
+        placeholder="在这里输入备注"
+        @update:value="onUpdateNotes"
+      />
+    </div>
     <types :type.sync="record.type" />
     <number-pad :value.sync="record.amount" @update:submit="saveRecord" />
   </Layout>
@@ -13,10 +15,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import NumberPad from "@/components/NumberPad.vue";
-import Tags from "@/components/Tags.vue";
-import Types from "@/components/Types.vue";
-import Notes from "@/components/Notes.vue";
+import NumberPad from "@/components/Money/NumberPad.vue";
+import Tags from "@/components/Money/Tags.vue";
+import Types from "@/components/Money/Types.vue";
+import FormItem from "@/components/Money/FormItem.vue";
 import { Component, Watch } from "vue-property-decorator";
 import recordListModel from "@/models/recordListModel";
 import tagListModel from "@/models/tagListModel";
@@ -35,7 +37,7 @@ type RecordItem = {
   createdAt?: Date; //类/构造函数
 };
 
-@Component({ components: { NumberPad, Tags, Types, Notes } })
+@Component({ components: { NumberPad, Tags, Types, FormItem } })
 export default class Money extends Vue {
   tags = tagList;
   record: RecordItem = {
@@ -69,5 +71,7 @@ export default class Money extends Vue {
   flex-direction: column;
   justify-content: flex-start;
 }
+.notes {
+  padding: 12px;
+}
 </style>
-<style lang="scss" scoped></style>
