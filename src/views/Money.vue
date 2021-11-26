@@ -5,7 +5,9 @@
       <FormItem
         fieldName="备注"
         placeholder="在这里输入备注"
-        @update:value="onUpdateNotes"/> </div>
+        @update:value="onUpdateNotes"
+      />
+    </div>
     <types :type.sync="record.type" />
     <number-pad :value.sync="record.amount" @update:submit="saveRecord" />
   </Layout>
@@ -19,10 +21,8 @@ import Types from "@/components/Money/Types.vue";
 import FormItem from "@/components/Money/FormItem.vue";
 import { Component, Watch } from "vue-property-decorator";
 import recordListModel from "@/models/recordListModel";
-import tagListModel from "@/models/tagListModel";
 
-const recordList: RecordItem[] = recordListModel.fetch();
-const tagList = tagListModel.fetch();
+const recordList: RecordItem[] = recordListModel.fetch(); //读取当前localStorage中存储的Record数据
 
 // window.localStorage.setItem("version", "0.0.1");
 // const recordList: RecordItem[] = JSON.parse(window.localStorage.getItem('recordList') || '[]')
@@ -37,14 +37,14 @@ type RecordItem = {
 
 @Component({ components: { NumberPad, Tags, Types, FormItem } })
 export default class Money extends Vue {
-  tags = tagList;
+  tags = window.tagList;
   record: RecordItem = {
     tags: [],
     notes: "",
     type: "",
     amount: 0,
   };
-  recordList: RecordItem[] = recordList;
+  recordList: RecordItem[] = recordList; //用来放置所有record的更新数据，同时负责接收来自recordListModel的数据，起到了中转站的作用。
 
   onUpdateTags(tags: string[]) {
     this.record.tags = tags;
@@ -53,14 +53,11 @@ export default class Money extends Vue {
     this.record.notes = value;
   }
   saveRecord() {
-    const record2: RecordItem = recordListModel.clone(this.record); //record2 为record 的深拷贝
-    record2.createdAt = new Date();
-    this.recordList.push(record2);
+    recordListModel.create(this.record); //负责传入变更数据
   }
   @Watch("recordList")
   onRecordListChange() {
-    recordListModel.save(this.recordList);
-
+    recordListModel.save(); //在recordList数据变动后，将数据存入localStorage中
   }
 }
 </script>

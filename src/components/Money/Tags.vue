@@ -23,13 +23,13 @@ import { Component, Prop } from "vue-property-decorator";
 @Component
 export default class Tags extends Vue {
   @Prop(Array) dataSource: string[] | undefined;
-  selectedTags: string[] = [];
+  selectedTags: string[] = []; //存放选中标签的数组
   toggle(tag: string) {
-    const index = this.selectedTags.indexOf(tag);
+    const index = this.selectedTags.indexOf(tag); //找到传入的 tag 在选中标签的数组中(判断是否为选中tag)
     if (index >= 0) {
-      this.selectedTags.splice(index, 1);
+      this.selectedTags.splice(index, 1); //如果选中的tag已被选中，则从存放选中标签的数组中删除(取消标签选中状态)
     } else if (this.selectedTags.length == 0) {
-      this.selectedTags.push(tag);
+      this.selectedTags.push(tag); //否则就把此标签放入选中标签的数组中
     }
     this.$emit("update:selected", this.selectedTags);
   }
