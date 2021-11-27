@@ -21,6 +21,7 @@ type TagListModel = {
 };
 
 interface Window {
+  store:{
   tagList: Tag[];
   createTag: (name: string) => void;
   findTag: (id: string) => Tag | undefined;
@@ -28,4 +29,5 @@ interface Window {
   updateTag: TagListModel["update"];
   recordList: RecordItem[];
   createRecord: (record: RecordItem) => void;
+  }
 }
