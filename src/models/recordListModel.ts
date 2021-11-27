@@ -9,6 +9,7 @@ const recordListModel = {
     const record2: RecordItem = clone(record); //record2 为record 的深拷贝，
     record2.createdAt = new Date();
     this.data.push(record2);//将所有组件数据放入 data 中
+    this.save()
   },
   fetch() {
     this.data = JSON.parse(

@@ -19,13 +19,7 @@ import NumberPad from "@/components/Money/NumberPad.vue";
 import Tags from "@/components/Money/Tags.vue";
 import Types from "@/components/Money/Types.vue";
 import FormItem from "@/components/Money/FormItem.vue";
-import { Component, Watch } from "vue-property-decorator";
-import recordListModel from "@/models/recordListModel";
-
-const recordList: RecordItem[] = recordListModel.fetch(); //读取当前localStorage中存储的Record数据
-
-// window.localStorage.setItem("version", "0.0.1");
-// const recordList: RecordItem[] = JSON.parse(window.localStorage.getItem('recordList') || '[]')
+import { Component } from "vue-property-decorator";
 
 type RecordItem = {
   tags: string[];
@@ -44,7 +38,6 @@ export default class Money extends Vue {
     type: "",
     amount: 0,
   };
-  recordList: RecordItem[] = recordList; //用来放置所有record的更新数据，同时负责接收来自recordListModel的数据，起到了中转站的作用。
 
   onUpdateTags(tags: string[]) {
     this.record.tags = tags;
@@ -53,11 +46,7 @@ export default class Money extends Vue {
     this.record.notes = value;
   }
   saveRecord() {
-    recordListModel.create(this.record); //负责传入变更数据
-  }
-  @Watch("recordList")
-  onRecordListChange() {
-    recordListModel.save(); //在recordList数据变动后，将数据存入localStorage中
+    window.createRecord(this.record); //负责传入变更数据
   }
 }
 </script>
