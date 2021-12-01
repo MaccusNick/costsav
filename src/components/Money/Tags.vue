@@ -19,12 +19,19 @@
 <script lang="ts">
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-import store from "@/store/index2";
 
 @Component
 export default class Tags extends Vue {
-  tagList = store.fetchTags();
   selectedTags: string[] = []; //存放选中标签的数组
+
+  get tagList() {
+    return this.$store.state.tagList;
+  }
+
+  created() {
+    this.$store.commit("fetchTags");
+  }
+
   toggle(tag: string) {
     const index = this.selectedTags.indexOf(tag); //找到传入的 tag 在选中标签的数组中(判断是否为选中tag)
     if (index >= 0) {
@@ -39,7 +46,7 @@ export default class Tags extends Vue {
     if (!name) {
       return window.alert("标签名不能为空");
     }
-    store.createTag(name);
+    this.$store.commit("createTag", name);
   }
 }
 </script>

@@ -1,7 +1,5 @@
 <template>
   <Layout class-prefix="layout">
-    {{ count }}
-    <button @click="$store.commit('increment', 1)">+1s</button>
     <tags />
     <!-- <tags @update:selected="onUpdateTags" /> -->
     <div class="notes">
@@ -23,8 +21,6 @@ import Tags from "@/components/Money/Tags.vue";
 import Types from "@/components/Money/Types.vue";
 import FormItem from "@/components/Money/FormItem.vue";
 import { Component } from "vue-property-decorator";
-import oldstore from "@/store/index2";
-import store from "@/store/index";
 
 type RecordItem = {
   tags: string[];
@@ -36,20 +32,20 @@ type RecordItem = {
 
 @Component({
   components: { NumberPad, Tags, Types, FormItem },
-  computed: {
-    count() {
-      return store.state.count;//等价store.state.count
-    },
-  },
 })
 export default class Money extends Vue {
-  tags = oldstore.tagList;
+  get recordList() {
+    return this.$store.state.recordList;
+  }
   record: RecordItem = {
     tags: [],
     notes: "",
     type: "",
     amount: 0,
   };
+  created() {
+    this.$store.commit("fetchRecords");
+  }
 
   onUpdateTags(tags: string[]) {
     this.record.tags = tags;
@@ -58,7 +54,7 @@ export default class Money extends Vue {
     this.record.notes = value;
   }
   saveRecord() {
-    oldstore.createRecord(this.record); //负责传入变更数据
+    this.$store.commit("createRecord", this.record); //负责传入变更数据
   }
 }
 </script>
