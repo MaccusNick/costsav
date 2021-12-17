@@ -12,9 +12,18 @@ ul,
 ol {
   list-style: none;
 }
-button, input{
+button,
+input {
   font: inherit;
-}/*子元素无法继承父元素字体，所以声明全局 button 和 input 继承字体即可*/
-:focus{
+} /*子元素无法继承父元素字体，所以声明全局 button 和 input 继承字体即可*/
+:focus {
   outline: none;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: normal;
 }
