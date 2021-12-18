@@ -1,16 +1,12 @@
 <template>
   <Layout>
     <Tabs class-prefix="type" :dataSource="typeList" :value.sync="type" />
-    <Tabs
-      class-prefix="interval"
-      :dataSource="intervalList"
-      :value.sync="interval"
-    />
     <div>
       <ol>
-        <li v-for="(group, index) in result" :key="index">
+        <li v-for="(group, index) in groupedList" :key="index">
           <h3 class="title">
             {{ beautify(group.title) }}
+            <span>${{ group.total }}</span>
           </h3>
           <ol>
             <li v-for="item in group.items" :key="item.id" class="record">
@@ -27,9 +23,9 @@
 
 <style lang="scss" scoped>
 ::v-deep .type-tabs-item {
-  background: white;
+  background: #c4c4c4;
   &.selected {
-    background: #c4c4c4;
+    background: white;
     &::after {
       display: none;
     }
@@ -100,7 +96,7 @@ export default class Statistics extends Vue {
     return (this.$store.state as RootState).recordList;
   }
 
-  get result() {
+  get groupedList() {
     const recordList = this.recordList;
     // eslint-disable-next-line no-undef
     if (recordList.length === 0) {
@@ -109,11 +105,14 @@ export default class Statistics extends Vue {
     // type HashTableValue = { title: string; items: RecordItem[] };
     // const hashTable: { title: string; items: RecordItem[] }[];
 
-    const newList = clone(recordList).sort(
-      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
-    );
-
-    const groupedList = [
+    const newList = clone(recordList)
+      .filter((r) => r.type === this.type)
+      .sort(
+        (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+      );
+    // eslint-disable-next-line no-undef
+    type Result = { title: string; total?: number; items: RecordItem[] }[];
+    const result: Result = [
       {
         title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
         items: [newList[0]],
@@ -122,21 +121,24 @@ export default class Statistics extends Vue {
 
     for (let i = 1; i < newList.length; i++) {
       const current = newList[i];
-      const last = groupedList[groupedList.length - 1];
+      const last = result[result.length - 1];
       if (dayjs(last.title).isSame(dayjs(current.createdAt), "day")) {
         last.items.push(current);
       } else {
-        groupedList.push({
+        result.push({
           title: dayjs(current.createdAt).format("YYYY-MM-DD"),
           items: [current],
         });
       }
+      result.map((group) => {
+        group.total = group.items.reduce((sum, item) => sum + item.amount, 0);
+      });//计算消费总额
     }
 
-    console.log(groupedList);
-    return groupedList;
+    console.log(result);
+    return result;
 
-    // console.log(groupedList);//数组中存放最新创建的账单的时间，和所有信息，两个key的对象
+    // console.log(result);//数组中存放最新创建的账单的时间，和所有信息，两个key的对象
     // console.log(last);//拿走数组中的对象
     // console.log(recordList);//未排序的recordList
     // console.log(newList);//从小到大，按照时间排序后的recordList
