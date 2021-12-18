@@ -65,6 +65,7 @@
 import Tabs from "@/components/Tabs.vue";
 import intervalList from "@/constants/intervalList";
 import recordTypeList from "@/constants/recordTypeList";
+import clone from "@/lib/clone";
 import dayjs from "dayjs";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
@@ -102,17 +103,44 @@ export default class Statistics extends Vue {
   get result() {
     const recordList = this.recordList;
     // eslint-disable-next-line no-undef
-    type HashTableValue = { title: string; items: RecordItem[] };
-    const hashTable: { [key: string]: HashTableValue } = {};
-    for (let i = 0; i < recordList.length; i++) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      const [date, time] = recordList[i].createdAt!.split("T");
-      hashTable[date] = hashTable[date] || { title: date, items: [] };
-      hashTable[date].items.push(recordList[i]);
-      console.log(hashTable);
+    if (recordList.length === 0) {
+      return [];
+    }
+    // type HashTableValue = { title: string; items: RecordItem[] };
+    // const hashTable: { title: string; items: RecordItem[] }[];
+
+    const newList = clone(recordList).sort(
+      (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
+    );
+
+    const groupedList = [
+      {
+        title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
+        items: [newList[0]],
+      },
+    ];
+
+    for (let i = 1; i < newList.length; i++) {
+      const current = newList[i];
+      const last = groupedList[groupedList.length - 1];
+      if (dayjs(last.title).isSame(dayjs(current.createdAt), "day")) {
+        last.items.push(current);
+      } else {
+        groupedList.push({
+          title: dayjs(current.createdAt).format("YYYY-MM-DD"),
+          items: [current],
+        });
+      }
     }
 
-    return hashTable;
+    console.log(groupedList);
+    return groupedList;
+
+    // console.log(groupedList);//数组中存放最新创建的账单的时间，和所有信息，两个key的对象
+    // console.log(last);//拿走数组中的对象
+    // console.log(recordList);//未排序的recordList
+    // console.log(newList);//从小到大，按照时间排序后的recordList
+    // return newList;
   }
 
   beforeCreate() {
