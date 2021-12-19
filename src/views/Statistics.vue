@@ -2,7 +2,7 @@
   <Layout>
     <Tabs class-prefix="type" :dataSource="typeList" :value.sync="type" />
     <div>
-      <ol>
+      <ol v-if="groupedList.length > 0">
         <li v-for="(group, index) in groupedList" :key="index">
           <h3 class="title">
             {{ beautify(group.title) }}
@@ -17,6 +17,7 @@
           </ol>
         </li>
       </ol>
+      <div v-else>目前没有相关记录</div>
     </div>
   </Layout>
 </template>
@@ -99,9 +100,7 @@ export default class Statistics extends Vue {
   get groupedList() {
     const recordList = this.recordList;
     // eslint-disable-next-line no-undef
-    if (recordList.length === 0) {
-      return [];
-    }
+
     // type HashTableValue = { title: string; items: RecordItem[] };
     // const hashTable: { title: string; items: RecordItem[] }[];
 
@@ -110,6 +109,10 @@ export default class Statistics extends Vue {
       .sort(
         (a, b) => dayjs(b.createdAt).valueOf() - dayjs(a.createdAt).valueOf()
       );
+    // eslint-disable-next-line no-undef
+    if (newList.length === 0) {
+      return [];
+    }
     // eslint-disable-next-line no-undef
     type Result = { title: string; total?: number; items: RecordItem[] }[];
     const result: Result = [
@@ -130,9 +133,10 @@ export default class Statistics extends Vue {
           items: [current],
         });
       }
+      console.log(result);
       result.map((group) => {
         group.total = group.items.reduce((sum, item) => sum + item.amount, 0);
-      });//计算消费总额
+      }); //计算消费总额
     }
 
     console.log(result);

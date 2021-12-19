@@ -6,6 +6,7 @@
         fieldName="备注"
         placeholder="在这里输入备注"
         @update:value="onUpdateNotes"
+        :value="record.notes"
       />
     </div>
     <tabs :dataSource="recordTypeList" :value.sync="record.type" />
@@ -58,7 +59,15 @@ export default class Money extends Vue {
     this.record.notes = value;
   }
   saveRecord() {
-    this.$store.commit("createRecord", this.record); //负责传入变更数据
+    if (!this.record.tags || this.record.tags.length === 0) {
+      window.alert("请至少选择一个选项");
+    } else {
+      this.$store.commit("createRecord", this.record); //负责传入变更数据
+      if (this.$store.state.createRecordError === null) {
+        window.alert("已保存");
+        this.record.notes = "";
+      }
+    }
   }
 }
 </script>
