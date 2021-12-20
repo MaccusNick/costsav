@@ -66,7 +66,7 @@ import clone from "@/lib/clone";
 import dayjs from "dayjs";
 import Vue from "vue";
 import { Component } from "vue-property-decorator";
-console.log(dayjs());
+
 @Component({
   components: { Tabs },
 })
@@ -98,11 +98,11 @@ export default class Statistics extends Vue {
   }
 
   get groupedList() {
-    const recordList = this.recordList;
+    const { recordList } = this;
     // eslint-disable-next-line no-undef
-
-    // type HashTableValue = { title: string; items: RecordItem[] };
-    // const hashTable: { title: string; items: RecordItem[] }[];
+    if (recordList.length === 0) {
+      return [];
+    }
 
     const newList = clone(recordList)
       .filter((r) => r.type === this.type)
@@ -119,6 +119,7 @@ export default class Statistics extends Vue {
       {
         title: dayjs(newList[0].createdAt).format("YYYY-MM-DD"),
         items: [newList[0]],
+        total: newList[0].amount,
       },
     ];
 
@@ -135,11 +136,12 @@ export default class Statistics extends Vue {
       }
       console.log(result);
       result.map((group) => {
-        group.total = group.items.reduce((sum, item) => sum + item.amount, 0);
-      }); //计算消费总额
+        group.total = group.items.reduce((sum, item) => {
+          return sum + item.amount;
+        }, 0);
+      });
     }
 
-    console.log(result);
     return result;
 
     // console.log(result);//数组中存放最新创建的账单的时间，和所有信息，两个key的对象

@@ -16,8 +16,8 @@
 </template>
 
 <script lang="ts">
-import x from "@/assets/icons/Label.svg";
-console.log(x);
+// import x from "@/assets/icons/Label.svg";
+// console.log(x);
 
 export default {
   name: "Nav",
@@ -44,8 +44,8 @@ nav {
   }
   > .item.selected {
     font-size: 15px;
-  
-    .icon{
+
+    .icon {
       width: 35px;
       height: 35px;
     }
